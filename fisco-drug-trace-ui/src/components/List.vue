@@ -215,7 +215,7 @@
 <script setup>
 import { defineEmits, defineProps, getCurrentInstance, ref } from "vue";
 import moment from "moment";
-import OSS from "ali-oss";
+// import OSS from "ali-oss";
 const { proxy } = getCurrentInstance();
 const emit = defineEmits(["reset", "find", "add", "update"]);
 const file = ref(null);
@@ -224,29 +224,29 @@ const handleFileChange = (event) => {
 };
 const uploadImage = async () => {
   const objectName = `${file.value.name}`;
-  const client = new OSS({
-    region: "oss-cn", // 示例：'oss-cn-hangzhou'，填写Bucket所在地域。
-    accessKeyId: "LTAI5tD8hEEmGcojE5Ngu1vK",
-    accessKeySecret: "vWx4k8WBZn7bTEBXYD0AqY9Af6wr5e",
-    bucket: "abu0418",
-  });
+  // const client = new OSS({
+  //   region: "oss-cn", // 示例：'oss-cn-hangzhou'，填写Bucket所在地域。
+  //   accessKeyId: "LTAI5tD8hEEmGcojE5Ngu1vK",
+  //   accessKeySecret: "vWx4k8WBZn7bTEBXYD0AqY9Af6wr5e",
+  //   bucket: "abu0418",
+  // });
 
-  try {
-    const formData = new FormData();
-    formData.append("file", file.value);
-    const uploadResult = await client.multipartUpload(objectName, file.value);
-    console.log("上传成功:", uploadResult);
+  // try {
+  //   const formData = new FormData();
+  //   formData.append("file", file.value);
+  //   const uploadResult = await client.multipartUpload(objectName, file.value);
+  //   console.log("上传成功:", uploadResult);
 
-    // 从OSS下载文件以验证上传成功
-    // const getResult = await client.get(objectName);
-    // console.log("获取文件成功:", getResult);
-    // console.log(result);
-    // 生成图片的URL
-    // const imageUrl = result.url;
-    // console.log(imageUrl);
-  } catch (e) {
-    console.error(e);
-  }
+  //   // 从OSS下载文件以验证上传成功
+  //   // const getResult = await client.get(objectName);
+  //   // console.log("获取文件成功:", getResult);
+  //   // console.log(result);
+  //   // 生成图片的URL
+  //   // const imageUrl = result.url;
+  //   // console.log(imageUrl);
+  // } catch (e) {
+  //   console.error(e);
+  // }
 };
 const props = defineProps({
   page: {
