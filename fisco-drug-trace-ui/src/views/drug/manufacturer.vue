@@ -119,7 +119,11 @@ const formProps = [
         "label": "质量控制和检验结果",
 
     },
-
+    {
+        "prop": "dealer",
+        "label": "上传图片",
+        "type": "upload"
+    }
 ]
 
 const formRules = {
