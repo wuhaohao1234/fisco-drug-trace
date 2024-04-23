@@ -160,6 +160,7 @@
                 </template>
                 <template v-if="itemProps.type === 'upload'">
                   <div>
+                  <div>
                     <input
                       type="file"
                       ref="fileInput"
@@ -170,6 +171,11 @@
                       >上传图片</el-button
                     >
                   </div>
+                  <div style="display: flex;" >
+                    <img  style="width: 100px; height: 100px;display: block;margin: 10px" v-for="(img, key) in images" :key="key" :src="img"  />
+                  </div>
+                  </div>
+
                 </template>
                 <template v-if="itemProps.type === 'tag'">
                   <div class="flex gap-2">
@@ -222,31 +228,29 @@ const file = ref(null);
 const handleFileChange = (event) => {
   file.value = event.target.files[0];
 };
+const images = ref([])
 const uploadImage = async () => {
   const objectName = `${file.value.name}`;
-  // const client = new OSS({
-  //   region: "oss-cn", // 示例：'oss-cn-hangzhou'，填写Bucket所在地域。
-  //   accessKeyId: "LTAI5tD8hEEmGcojE5Ngu1vK",
-  //   accessKeySecret: "vWx4k8WBZn7bTEBXYD0AqY9Af6wr5e",
-  //   bucket: "abu0418",
-  // });
+  const formData = new FormData();
+  formData.append("image", file.value);
 
-  // try {
-  //   const formData = new FormData();
-  //   formData.append("file", file.value);
-  //   const uploadResult = await client.multipartUpload(objectName, file.value);
-  //   console.log("上传成功:", uploadResult);
-
-  //   // 从OSS下载文件以验证上传成功
-  //   // const getResult = await client.get(objectName);
-  //   // console.log("获取文件成功:", getResult);
-  //   // console.log(result);
-  //   // 生成图片的URL
-  //   // const imageUrl = result.url;
-  //   // console.log(imageUrl);
-  // } catch (e) {
-  //   console.error(e);
-  // }
+  fetch("http://localhost:3000/upload", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to upload file");
+      }
+      return response.text();
+    })
+    .then((data) => {
+      const url = 'http://localhost:3000/uploads/' + JSON.parse(data).originalname
+      images.value = images.value.concat(url)
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 };
 const props = defineProps({
   page: {

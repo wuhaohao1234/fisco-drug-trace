@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const port = 3000;
-
+const path = require('path');
+const multer  = require('multer');
 // 模拟用户数据
 const users = [];
-
+app.use(cors());
 // 获取当前用户信息
 app.get('/user/me', (req, res) => {
     // 假设这里有身份验证中间件，可以获取当前用户信息
@@ -43,7 +45,8 @@ app.post('/api/v1/user/login', (req, res) => {
         code: 0,
         data: {
             nickname: 'example',
-            role: "merchant",
+            // role: "merchant",
+            role: ""
         }
     })
 });
@@ -172,6 +175,28 @@ app.get('/drug/buy/list', (req, res) => {
     // 假设这里有获取购买药物列表的逻辑...
     res.send('List of drugs to buy');
 });
+
+// Multer configuration
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/') // Specify the directory for storing images
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname) // Keep the original file name
+    }
+});
+
+const upload = multer({ storage: storage });
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Image upload endpoint
+app.post('/upload', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No files were uploaded.');
+    }
+    res.send(req.file);
+});
+
 
 // 启动服务器
 app.listen(port, () => {
